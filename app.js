@@ -68,18 +68,19 @@ app
 
   .get("/", async (req, res) => {
     const doc = await User.findById(req.userId);
-    res.send(doc.data);
+    res.send(doc.expenses);
   })
 
   .post("/", async (req, res) => {
-    const data = req.body.data;
+    const data = req.body.expenses;
+    console.log(data);
     const doc = await User.findByIdAndUpdate(
       req.userId,
-      { data: data },
+      { expenses: data },
       { new: true }
     );
 
-    res.status(200).send(doc.pokemons);
+    res.status(200).send(doc.expenses);
   });
 
 app.listen(PORT, () => console.log(`Example app listening on port ${PORT}!`));
