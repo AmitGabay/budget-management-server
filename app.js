@@ -73,7 +73,6 @@ app
 
   .post("/", async (req, res) => {
     const data = req.body.expenses;
-    console.log(data);
     const doc = await User.findByIdAndUpdate(
       req.userId,
       { expenses: data },

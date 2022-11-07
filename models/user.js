@@ -5,10 +5,12 @@ const { Schema, model } = mongoose;
 const userSchema = new Schema({
   email: String,
   password: String,
-  expenses: {
-    date: Date,
-    data: [{ sum: Number, card: String, category: String }],
-  },
+  expenses: [
+    {
+      date: String,
+      data: [{ sum: Number, card: String, category: String }],
+    },
+  ],
   token: String,
 });
 
