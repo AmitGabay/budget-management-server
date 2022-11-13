@@ -39,7 +39,7 @@ app
 
     if (!result) return res.sendStatus(403);
 
-    const token = jwt.sign({ userId: doc._id }, KEY, { expiresIn: 6000 });
+    const token = jwt.sign({ userId: doc._id }, KEY, { expiresIn: "7d" });
     doc.token = token;
 
     doc.save();
@@ -71,7 +71,7 @@ app
     res.send(doc.expenses);
   })
 
-  .post("/", async (req, res) => {
+  .post("/daily", async (req, res) => {
     const data = req.body.expenses;
     const doc = await User.findByIdAndUpdate(
       req.userId,
@@ -79,6 +79,17 @@ app
       { new: true }
     );
 
+    res.status(200).send(doc.expenses);
+  })
+  .put("/daily", async (req, res) => {
+    const newExpense = req.body;
+    const doc = await User.findById(req.userId);
+    doc.expenses = doc.expenses.map((expense) => {
+      return expense.date.slice(0, 10) === newExpense.date.slice(0, 10)
+        ? newExpense
+        : expense;
+    });
+    await doc.save();
     res.status(200).send(doc.expenses);
   });
 
