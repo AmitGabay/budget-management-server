@@ -15,7 +15,14 @@ connectDB();
 
 app.use(bodyParser.json());
 
-app.use(cors({ origin: ["http://localhost:3000"] }));
+app.use(
+  cors({
+    origin: [
+      "https://7c2bf31d.budget-management.pages.dev/",
+      "http://localhost:3000",
+    ],
+  })
+);
 
 app.use((req, _, next) => {
   const { authorization } = req.headers;
