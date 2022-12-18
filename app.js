@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 
 app.use(
   cors({
-    origin: ["https://budget-management.pages.dev/", "http://localhost:3000"],
+    origin: ["https://budget-management.pages.dev", "http://localhost:3000"],
   })
 );
 
