@@ -88,11 +88,16 @@ app
   .put("/daily", async (req, res) => {
     const newExpense = req.body;
     const doc = await User.findById(req.userId);
-    doc.expenses = doc.expenses.map((expense) => {
-      return expense.date.slice(0, 10) === newExpense.date.slice(0, 10)
-        ? newExpense
-        : expense;
-    });
+    const exist = !!doc.expenses.find(
+      (expense) => expense.date.slice(0, 10) === newExpense.date.slice(0, 10)
+    );
+    if (exist) {
+      doc.expenses = doc.expenses.map((expense) => {
+        return expense.date.slice(0, 10) === newExpense.date.slice(0, 10)
+          ? newExpense
+          : expense;
+      });
+    } else doc.expenses.push(newExpense);
     await doc.save();
     res.status(200).send(doc.expenses);
   });
