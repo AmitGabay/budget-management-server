@@ -6,6 +6,7 @@ import jwt from "jsonwebtoken";
 
 import connectDB from "./db.js";
 import User from "./models/user.js";
+import { trimText } from "./utils.js";
 
 const app = express();
 const { PORT = 5000, KEY } = process.env;
@@ -76,22 +77,25 @@ app
   })
 
   .post("/daily", async (req, res) => {
-    const data = req.body.expenses;
+    const { expenses } = req.body;
     const doc = await User.findByIdAndUpdate(
       req.userId,
-      { expenses: data },
+      {
+        expenses: trimText(expenses),
+      },
       { new: true }
     );
 
     res.status(200).send(doc.expenses);
   })
   .put("/daily", async (req, res) => {
-    const newExpense = req.body;
+    const [newExpense] = trimText(req.body.expenses);
     const doc = await User.findById(req.userId);
-    const exist = !!doc.expenses.find(
+    const exists = !!doc.expenses.find(
       (expense) => expense.date.slice(0, 10) === newExpense.date.slice(0, 10)
     );
-    if (exist) {
+
+    if (exists) {
       doc.expenses = doc.expenses.map((expense) => {
         return expense.date.slice(0, 10) === newExpense.date.slice(0, 10)
           ? newExpense
